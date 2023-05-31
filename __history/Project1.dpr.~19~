@@ -1,0 +1,23 @@
+program Project1;
+
+uses
+  Vcl.Forms,
+  MainUnit in 'MainUnit.pas' {MainForm},
+  Vcl.Themes,
+  Vcl.Styles,
+  TypeAddUnit in 'TypeAddUnit.pas' {AddTypeForm},
+  CandyAddUnit in 'CandyAddUnit.pas' {AddCandyForm},
+  Ratings in 'Ratings.pas' {RatingForm};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Tablet Dark');
+  AApplication.CreateForm(TMainForm, MainForm);
+  AApplication.CreateForm(TAddTypeForm, AddTypeForm);
+  AApplication.CreateForm(TAddCandyForm, AddCandyForm);
+  AApplication.CreateForm(TRatingForm, RatingForm);
+  ication.Run;
+end.

@@ -1,0 +1,115 @@
+object GiftForm: TGiftForm
+  Left = 0
+  Top = 0
+  Caption = #1056#1077#1081#1090#1080#1085#1075
+  ClientHeight = 604
+  ClientWidth = 1076
+  Color = clBtnFace
+  Font.Charset = RUSSIAN_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -16
+  Font.Name = 'Times New Roman'
+  Font.Style = []
+  OldCreateOrder = False
+  OnClose = FormClose
+  DesignSize = (
+    1076
+    604)
+  PixelsPerInch = 96
+  TextHeight = 19
+  object WeightEdit: TLabeledEdit
+    Left = 88
+    Top = 16
+    Width = 185
+    Height = 29
+    Alignment = taCenter
+    EditLabel.Width = 75
+    EditLabel.Height = 19
+    EditLabel.Caption = #1054#1073#1097#1080#1081' '#1074#1077#1089
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    LabelPosition = lpLeft
+    ParentFont = False
+    PopupMenu = MainForm.PopupMenu
+    TabOrder = 0
+    TextHint = #1042#1077#1089' '#1087#1086#1076#1072#1088#1082#1072
+    OnChange = WeightEditChange
+    OnKeyDown = WeightEditKeyDown
+    OnKeyPress = WeightEditKeyPress
+  end
+  object CountTypeEdit: TLabeledEdit
+    Left = 456
+    Top = 16
+    Width = 185
+    Height = 29
+    Alignment = taCenter
+    EditLabel.Width = 163
+    EditLabel.Height = 19
+    EditLabel.Caption = #1050#1086#1083'-'#1074#1086' '#1090#1080#1087#1086#1074' '#1074' '#1087#1086#1076#1072#1088#1082#1077
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    LabelPosition = lpLeft
+    ParentFont = False
+    PopupMenu = MainForm.PopupMenu
+    TabOrder = 1
+    TextHint = #1058#1080#1087
+    OnChange = WeightEditChange
+    OnKeyDown = WeightEditKeyDown
+    OnKeyPress = WeightEditKeyPress
+  end
+  object ValueEdit: TLabeledEdit
+    Left = 776
+    Top = 16
+    Width = 185
+    Height = 29
+    Alignment = taCenter
+    EditLabel.Width = 119
+    EditLabel.Height = 19
+    EditLabel.Caption = #1054#1073#1097#1072#1103' '#1089#1090#1086#1080#1084#1086#1089#1090#1100
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    LabelPosition = lpLeft
+    ParentFont = False
+    PopupMenu = MainForm.PopupMenu
+    TabOrder = 2
+    TextHint = #1062#1077#1085#1072
+    OnChange = WeightEditChange
+    OnKeyDown = WeightEditKeyDown
+    OnKeyPress = WeightEditKeyPress
+  end
+  object AddGiftBtn: TBitBtn
+    Left = 776
+    Top = 64
+    Width = 185
+    Height = 42
+    Caption = #1056#1072#1089#1089#1095#1080#1090#1072#1090#1100
+    Enabled = False
+    NumGlyphs = 2
+    TabOrder = 3
+    OnClick = AddGiftBtnClick
+  end
+  object StringGrid1: TStringGrid
+    Left = 8
+    Top = 152
+    Width = 1060
+    Height = 444
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    ColCount = 1
+    DefaultColWidth = 100
+    DefaultColAlignment = taCenter
+    DefaultRowHeight = 40
+    FixedCols = 0
+    RowCount = 2
+    TabOrder = 4
+    Visible = False
+  end
+end

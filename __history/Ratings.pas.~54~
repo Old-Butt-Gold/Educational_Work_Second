@@ -1,0 +1,212 @@
+unit Ratings;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, MainUnit, Vcl.ComCtrls, Vcl.Grids, CommCtrl;
+
+type
+  TRating = Record
+      TeamCode, Score: Integer;
+      FullName: String[50];
+      Code: String[6];
+  End;
+
+  PRating = ^TRating;
+
+  PAllRating = ^TAllRating;
+  TAllRating = Record
+      Current: TRating;
+      Next: PAllRating;
+  End;
+
+  TLinkedList = Record
+      Head, Tail: PAllRating;
+  End;
+
+  TRatingForm = class(TForm)
+    ListView1: TListView;
+    Procedure InsertElement(Var List: TLinkedList; NewRating: TRating);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+      BestList, WorstList: TLinkedList;
+
+  public
+
+  end;
+
+var
+  RatingForm: TRatingForm;
+
+implementation
+
+
+{procedure TTeamForm.N1Click(Sender: TObject);
+Var
+    FileOutput: TextFile;
+    I, J: Integer;
+    Str: String;
+begin
+    If SaveDialog.Execute Then
+    Begin
+        Try
+            Try
+                AssignFile(FileOutput, ChangeFileExt(SaveDialog.FileName, '.txt'));
+                Rewrite(FileOutput);
+                For I := 0 to ListView1.Items.Count - 1 do
+                Begin
+                    Str := ListView1.Items.Item[I].Caption + ', ';
+                    For J := 0 to ListView1.Items.Item[I].SubItems.Count - 1 do
+                        Str := Str + ListView1.Items.Item[I].SubItems.Strings[J] + ', ';
+                    Delete(Str, Length(Str) - 2, 2);
+                    WriteLn(FileOutput, Str);
+                End;
+            Except
+                MessageBox(Handle, 'Файл некорректен!', 'Внимание!', MB_OK + MB_ICONWARNING);
+            End;
+        Finally
+            If FileExists(ChangeFileExt(SaveDialog.FileName, '.txt')) Then
+                CloseFile(FileOutput);
+        End;
+    End;
+end;}
+
+procedure ClearLinkedList(var list: TLinkedList);
+var
+    current, nextNode: PAllRating;
+begin
+    current := list.Head;
+    while current <> nil do
+    begin
+        nextNode := current^.Next;
+        Dispose(current);
+        current := nextNode;
+    end;
+    list.Head := nil;
+    list.Tail := nil;
+end;
+
+procedure TRatingForm.InsertElement(Var List: TLinkedList; NewRating: TRating);
+var
+    NewNode: PAllRating;
+begin
+    New(NewNode);
+    NewNode^.Current := NewRating;
+    NewNode^.Next := nil;
+    If List.Head = nil Then
+    Begin
+        List.Head := NewNode;
+        List.Tail := NewNode;
+    End
+    Else
+    Begin
+        List.Tail^.Next := NewNode;
+        List.Tail := List.Tail^.Next;
+        //List.Tail^.Next := Nil;
+    End;
+end;
+
+procedure TRatingForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    ListView1.Clear;
+    ClearLinkedList(BestList);
+    ClearLinkedList(WorstList);
+end;
+
+// Процедура для разделения списка на две половины
+procedure SplitLinkedList(var source, frontList, backList: PAllRating);
+var
+    fastPtr, slowPtr: PAllRating;
+begin
+    slowPtr := source;
+    fastPtr := source^.Next;
+
+    // Используется два указателя: slowPtr и fastPtr.
+    // fastPtr перемещается вдвое быстрее, чем slowPtr,
+    // чтобы разделить список пополам.
+    while (fastPtr <> nil) do
+    begin
+        fastPtr := fastPtr^.Next;
+        if (fastPtr <> nil) then
+        begin
+            slowPtr := slowPtr^.Next;
+            fastPtr := fastPtr^.Next;
+        end;
+    end;
+
+    // frontList указывает на начало первой половины списка,
+    // а backList указывает на начало второй половины списка.
+    frontList := source;
+    backList := slowPtr^.Next;
+    slowPtr^.Next := nil; // Разрываем связь между двумя половинами.
+end;
+
+// Функция для объединения двух отсортированных списков
+function SortedMerge(listA, listB: PAllRating): PAllRating;
+var
+  mergedList: PAllRating;
+begin
+    // Если один из списков пуст, возвращаем другой список.
+    if (listA = nil) then
+        Result := listB
+    else if (listB = nil) then
+        Result := listA
+    else
+    begin
+        // Сравниваем значения Score элементов двух списков и
+        // рекурсивно объединяем их в отсортированный список.
+        if (listA^.Current.Score >= listB^.Current.Score) then // <= по убыванию, Вместо Score введите свое поле
+        begin
+            mergedList := listA;
+            mergedList^.Next := SortedMerge(listA^.Next, listB);
+        end
+        else
+        begin
+            mergedList := listB;
+            mergedList^.Next := SortedMerge(listA, listB^.Next);
+        end;
+
+        Result := mergedList;
+    end;
+end;
+
+// Процедура для сортировки списка с использованием алгоритма Merge Sort
+procedure MergeSort(var headList: PAllRating);
+var
+    headPtr, firstHalf, secondHalf: PAllRating;
+begin
+    headPtr := headList;
+
+    // Базовый случай: если список пуст или состоит из одного элемента,
+    // он уже отсортирован.
+    if (headPtr = nil) or (headPtr^.Next = nil) then
+        Exit;
+
+    // Разделяем список на две половины.
+    SplitLinkedList(headPtr, firstHalf, secondHalf);
+
+    // Рекурсивно сортируем каждую половину списка.
+    MergeSort(firstHalf);
+    MergeSort(secondHalf);
+
+    // Объединяем отсортированные половины в один список.
+    headList := SortedMerge(firstHalf, secondHalf);
+end;
+
+// Процедура для сортировки однонаправленного списка (TLinkedList)
+procedure SortLinkedList(var linkedList: TLinkedList);
+begin
+    // Вызываем MergeSort, передавая указатель на начало списка.
+    MergeSort(linkedList.Head);
+
+    // Находим указатель на последний элемент списка (Tail).
+    linkedList.Tail := linkedList.Head;
+    If LinkedList.Tail <> Nil Then
+        while (linkedList.Tail^.Next <> nil) do
+            linkedList.Tail := linkedList.Tail^.Next;
+end;
+
+{$R *.dfm}
+
+end.

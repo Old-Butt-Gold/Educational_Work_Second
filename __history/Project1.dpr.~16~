@@ -1,0 +1,25 @@
+﻿program Project1;
+
+uses
+  Vcl.Forms,
+  MainUnit in 'MainUnit.pas' {MainForm},
+  Vcl.Themes,
+  Vcl.Styles,
+  TypeAddUnit in 'TypeAddUnit.pas' {AddTypeForm},
+  PlayerAddUnit in 'PlayerAddUnit.pas' {AddCandyForm},
+  Ratings in 'Ratings.pas' {RatingForm},
+  PlayerOfTeam in 'PlayerOfTeam.pas' {TeamForm};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Tablet Dark');
+  AApplication.CreateForm(TMainForm, MainForm);
+  AApplication.CreateForm(TAddTypeForm, AddTypeForm);
+  Application.CreateForm(TAddCandyForm, AddPlayerForm);
+  Application.CreateForm(TRatingForm, RatingForm);
+  Application.CreateForm(TTeamForm, TeamForm);
+  plication.Run;
+end.
